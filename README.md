@@ -777,6 +777,9 @@ The specific performance metrics are as follows:
    - roll should less than 0.025 radian of nominal for 0.75 seconds (3/4 of the duration of the loop)
    - roll rate should less than 2.5 radian/sec for 0.75 seconds
 
+Result:
+![Console de débogage Microsoft Visual Studio](https://user-images.githubusercontent.com/34095574/113295808-f41cb980-92f8-11eb-9bf9-48f8eb45b0ce.jpg)
+
  - scenario 3
    - X position of both drones should be within 0.1 meters of the target for at least 1.25 seconds
    - Quad2 yaw should be within 0.1 of the target for at least 1 second
