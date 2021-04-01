@@ -1,9 +1,4 @@
 
-https://user-images.githubusercontent.com/34095574/113299081-c76aa100-92fc-11eb-879f-c266458d30a9.mp4
-
-[![Alt text](![ManyQuads mp4 - Lecteur multimédia VLC](https://user-images.githubusercontent.com/34095574/113299867-9dfe4500-92fd-11eb-8103-7e328ebf9283.jpg)
-)](https://user-images.githubusercontent.com/34095574/113299081-c76aa100-92fc-11eb-879f-c266458d30a9.mp4)
-
 # The C++ Project Readme #
 
 This is the readme for the C++ project.
