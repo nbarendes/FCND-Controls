@@ -171,7 +171,7 @@ we may find it helpful to consult the [Python controller code](https://github.co
 ![image](https://user-images.githubusercontent.com/34095574/113293695-63dd7500-92f6-11eb-9fdb-f8d35d345b78.png)
 
 
-
+ The architecture of the controller consists of altitude controller, position controller, and attitude controller.
 
 
 
