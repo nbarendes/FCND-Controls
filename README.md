@@ -173,8 +173,6 @@ First, we will implement the body rate and roll / pitch control.  For the simula
 #### 1. Implement body rate control ####
 
 The commanded roll, pitch, and yaw are collected by the body rate controller, and they are translated into the desired moment along the axis in the body frame. This control method use only P controller.
-
- implement the code in the function `BodyRateControl()`
  
  ```python
  def body_rate_controller(self,
@@ -209,10 +207,38 @@ If we come back to this step after the next step, we can try tuning just the bod
 
 
 
-2. Implement roll / pitch control
-We won't be worrying about yaw just yet.
+#### 2. Implement roll / pitch control####
 
- - implement the code in the function `RollPitchControl()`
+The roll-pitch controller is a P controller responsible for commanding the roll and pitch rates ( 𝑝𝑐  and  𝑞𝑐 ) in the body frame. First, it sets the desired rate of change of the given matrix elements using a P controller.
+
+```
+def roll_pitch_controller(self,
+                          b_x_c_target,
+                          b_y_c_target,
+                          rot_mat):
+    
+    
+    # return p_c, q_c
+    b_x = rot_mat[0,2]
+    b_x_err = b_x_c_target - b_x
+    b_x_p_term = self.k_p_roll * b_x_err
+        
+    b_y = rot_mat[1,2]
+    b_y_err = b_y_c_target - b_y  
+    b_y_p_term = self.k_p_pitch * b_y_err
+        
+    b_x_commanded_dot = b_x_p_term
+    b_y_commanded_dot = b_y_p_term
+        
+    rot_mat1=np.array([[rot_mat[1,0],-rot_mat[0,0]],[rot_mat[1,1],-rot_mat[0,1]]])/rot_mat[2,2]
+        
+    rot_rate = np.matmul(rot_mat1,np.array([b_x_commanded_dot,b_y_commanded_dot]).T)
+    p_c = rot_rate[0]
+    q_c = rot_rate[1]
+        
+    return p_c, q_c    
+ ```
+ 
  - Tune `kpBank` in `QuadControlParams.txt` to minimize settling time but avoid too much overshoot
 
 If successful you should now see the quad level itself (as shown below), though it’ll still be flying away slowly since we’re not controlling velocity/position!  You should also see the vehicle angle (Roll) get controlled to 0.
