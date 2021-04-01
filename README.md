@@ -153,32 +153,61 @@ With the proper mass, your simulation should look a little like this:
 
 ## The Tasks ##
 
-For this project, you will be building a controller in C++.  You will be implementing and tuning this controller in several steps.
+For this project, we will be building a controller in C++. We will be implementing and tuning this controller in several steps.
 
-You may find it helpful to consult the [Python controller code](https://github.com/udacity/FCND-Controls/blob/solution/controller.py) as a reference when you build out this controller in C++.
+we may find it helpful to consult the [Python controller code](https://github.com/udacity/FCND-Controls/blob/solution/controller.py) as a reference when we build out this controller in C++.
 
 #### Notes on Parameter Tuning
-1. **Comparison to Python**: Note that the vehicle you'll be controlling in this portion of the project has different parameters than the vehicle that's controlled by the Python code linked to above. **The tuning parameters that work for the Python controller will not work for this controller**
+1. **Comparison to Python**: Note that the vehicle we'll be controlling in this portion of the project has different parameters than the vehicle that's controlled by the Python code linked to above. **The tuning parameters that work for the Python controller will not work for this controller**
 
-2. **Parameter Ranges**: You can find the vehicle's control parameters in a file called `QuadControlParams.txt`. The default values for these parameters are all too small by a factor of somewhere between about 2X and 4X. So if a parameter has a starting value of 12, it will likely have a value somewhere between 24 and 48 once it's properly tuned.
+2. **Parameter Ranges**: we can find the vehicle's control parameters in a file called `QuadControlParams.txt`. The default values for these parameters are all too small by a factor of somewhere between about 2X and 4X. So if a parameter has a starting value of 12, it will likely have a value somewhere between 24 and 48 once it's properly tuned.
 
-3. **Parameter Ratios**: In this [one-page document](https://www.overleaf.com/read/bgrkghpggnyc#/61023787/) you can find a derivation of the ratio of velocity proportional gain to position proportional gain for a critically damped double integrator system. The ratio of `kpV / kpP` should be 4.
+3. **Parameter Ratios**: In this [one-page document](https://www.overleaf.com/read/bgrkghpggnyc#/61023787/) we can find a derivation of the ratio of velocity proportional gain to position proportional gain for a critically damped double integrator system. The ratio of `kpV / kpP` should be 4.
 
 ### Body rate and roll/pitch control (scenario 2) ###
 
-First, you will implement the body rate and roll / pitch control.  For the simulation, you will use `Scenario 2`.  In this scenario, you will see a quad above the origin.  It is created with a small initial rotation speed about its roll axis.  Your controller will need to stabilize the rotational motion and bring the vehicle back to level attitude.
+First, we will implement the body rate and roll / pitch control.  For the simulation, we will use `Scenario 2`.  In this scenario, we will see a quad above the origin.  It is created with a small initial rotation speed about its roll axis.  The controller will need to stabilize the rotational motion and bring the vehicle back to level attitude.
 
-To accomplish this, you will:
+
 
 1. Implement body rate control
 
- - implement the code in the function `GenerateMotorCommands()`
- - implement the code in the function `BodyRateControl()`
+The commanded roll, pitch, and yaw are collected by the body rate controller, and they are translated into the desired moment along the axis in the body frame. This control method use only P controller.
+
+ implement the code in the function `BodyRateControl()`
+ 
+ ```
+ def body_rate_controller(self,
+                         p_c,
+                         q_c,
+                         r_c,
+                         p_actual,
+                         q_actual,
+                         r_actual):
+    # TODO replace with your own implementation
+    # return u_bar_p, u_bar_q, u_bar_r
+    p_err= p_c - p_actual 
+    u_bar_p = self.k_p_p * p_err
+        
+    q_err= q_c - q_actual 
+    u_bar_q = self.k_p_q * q_err
+
+    r_err= r_c - r_actual
+    u_bar_r = self.k_p_r * r_err
+        
+    return u_bar_p, u_bar_q, u_bar_r  
+ 
+ ```
+ 
  - Tune `kpPQR` in `QuadControlParams.txt` to get the vehicle to stop spinning quickly but not overshoot
 
-If successful, you should see the rotation of the vehicle about roll (omega.x) get controlled to 0 while other rates remain zero.  Note that the vehicle will keep flying off quite quickly, since the angle is not yet being controlled back to 0.  Also note that some overshoot will happen due to motor dynamics!.
+We see the rotation of the vehicle about roll (omega.x) get controlled to 0 while other rates remain zero. The vehicle will keep flying off quite quickly, since the angle is not yet being controlled back to 0.  Some overshoot will happen due to motor dynamics!.
 
-If you come back to this step after the next step, you can try tuning just the body rate omega (without the outside angle controller) by setting `QuadControlParams.kpBank = 0`.
+If we come back to this step after the next step, we can try tuning just the body rate omega (without the outside angle controller) by setting `QuadControlParams.kpBank = 0`.
+
+
+
+
 
 2. Implement roll / pitch control
 We won't be worrying about yaw just yet.
