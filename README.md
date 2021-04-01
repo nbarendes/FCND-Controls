@@ -177,6 +177,7 @@ we may find it helpful to consult the [Python controller code](https://github.co
 
 The attitude controller breaks down into smaller controllers responsible for roll-pitch, yaw, and body rate.
 
+![image](https://user-images.githubusercontent.com/34095574/113294521-5e345f00-92f7-11eb-9d78-22f70dc67187.png)
 
 
 
