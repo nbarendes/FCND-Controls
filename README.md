@@ -170,7 +170,7 @@ First, we will implement the body rate and roll / pitch control.  For the simula
 
 
 
-#### 1. Implement body rate control ####
+#### 1- Implement body rate control ####
 
 The commanded roll, pitch, and yaw are collected by the body rate controller, and they are translated into the desired moment along the axis in the body frame. This control method use only P controller.
  
@@ -209,7 +209,7 @@ If we come back to this step after the next step, we can try tuning just the bod
 
 
 
-#### 2. Implement roll / pitch control ####
+#### 2- Implement roll / pitch control ####
 
 The roll-pitch controller is a P controller responsible for commanding the roll and pitch rates ( 𝑝𝑐  and  𝑞𝑐 ) in the body frame. First, it sets the desired rate of change of the given matrix elements using a P controller.
 
@@ -277,7 +277,7 @@ Next, you will implement the position, altitude and yaw control for your quad.  
 
 
 
-3- Altitude Control ( altitude_control() )
+#### 3- Altitude Control ( altitude_control() ) ####
 
  - implement the code in the function `AltitudeControl()`
 
@@ -324,7 +324,7 @@ Next, you will implement the position, altitude and yaw control for your quad.  
 
 If successful, the quads should be going to their destination points and tracking error should be going down (as shown below). However, one quad remains rotated in yaw.
 
-4- Heading Control ( yaw_control() )
+#### 4- Heading Control ( yaw_control() ) ####
 
 A P controller is used to control the drone's yaw.
 
@@ -358,7 +358,7 @@ A P controller is used to control the drone's yaw.
  ```
  - tune parameters `kpYaw` and the 3rd (z) component of `kpPQR`
 
-5- Lateral Position Control ( lateral_position_control() )
+#### 5- Lateral Position Control ( lateral_position_control() ) ####
  
  The drone generates lateral acceleration by changing the body orientation which results in non-zero thrust in the desired direction. A PD controller is used for the lateral controller.
  
