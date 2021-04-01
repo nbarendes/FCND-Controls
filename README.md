@@ -173,6 +173,11 @@ we may find it helpful to consult the [Python controller code](https://github.co
 
  The architecture of the controller consists of altitude controller, position controller, and attitude controller.
 
+![image](https://user-images.githubusercontent.com/34095574/113294398-380ebf00-92f7-11eb-8668-f93fd4b7fcdb.png)
+
+The attitude controller breaks down into smaller controllers responsible for roll-pitch, yaw, and body rate.
+
+
 
 
 ### Body rate and roll/pitch control (scenario 2) ###
