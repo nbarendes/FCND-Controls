@@ -264,6 +264,10 @@ For flying a trajectory, is there a way to provide even more information for eve
 
 How about trying to fly this trajectory as quickly as possible (but within following threshold)!
 
+## Implementation in C++ ##
+
+Implemented body rate control in C++.
+
 
 ## Evaluation ##
 
