@@ -459,7 +459,56 @@ How about trying to fly this trajectory as quickly as possible (but within follo
 
 Methods in QuadControl.cpp is given below
 
-This part is implemented in QuadControl::BodyRateControl:
+
+
+- This part is implemented in QuadControl::GenerateMotorCommands:
+
+In this function , the individual motor thrust commands is set.The drone rotor positions are swapped in this project versus the 3D lesson [3] The rotor positions are given below
+
+```cpp
+VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momentCmd)
+{
+  // Convert a desired 3-axis moment and collective thrust command to 
+  //   individual motor thrust commands
+  // INPUTS: 
+  //   desCollectiveThrust: desired collective thrust [N]
+  //   desMoment: desired rotation moment about each axis [N m]
+  // OUTPUT:
+  //   set class member variable cmd (class variable for graphing) where
+  //   cmd.desiredThrustsN[0..3]: motor commands, in [N]
+
+  // HINTS: 
+  // - you can access parts of desMoment via e.g. desMoment.x
+  // You'll need the arm length parameter L, and the drag/thrust ratio kappa
+
+  ////////////////////////////// BEGIN CODE ///////////////////////////
+
+//  cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
+//  cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
+//  cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
+//  cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
+    float l = L / sqrtf(2.f);
+    float c_bar = collThrustCmd;  // F1 + F2 + F3 + F4
+    float p_bar = momentCmd.x / l; // F1 - F2 + F3 - F4
+    float q_bar = momentCmd.y / l;  // F1 + F2 - F3 - F4
+    float r_bar = -momentCmd.z / kappa; // F1 - F2 - F3 + F4
+    
+    cmd.desiredThrustsN[0] = (c_bar + p_bar + q_bar + r_bar) / 4.f; // front left
+    cmd.desiredThrustsN[1] = (c_bar - p_bar + q_bar - r_bar) / 4.f; // front right
+    cmd.desiredThrustsN[2] = (c_bar + p_bar - q_bar - r_bar) / 4.f; // rear left
+    cmd.desiredThrustsN[3] = (c_bar - p_bar - q_bar + r_bar) / 4.f; // rear right
+  
+  /////////////////////////////// END CODE ////////////////////////////
+
+  return cmd;
+}
+
+```
+
+
+- This part is implemented in QuadControl::BodyRateControl:
+
+The commanded roll, pitch, and yaw are collected by the body rate controller, and they are translated into the desired moment along the axis in the body frame. This control method use only P controller.
 
 ```cpp
 V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
@@ -488,7 +537,9 @@ V3F QuadControl::BodyRateControl(V3F pqrCmd, V3F pqr)
   return momentCmd;
 ```
 
-This part is implemented in QuadControl::RollPitchControl:
+- This part is implemented in QuadControl::RollPitchControl:
+
+The roll-pitch controller is a P controller responsible for commanding the roll and pitch rates ( pqrCmd.x and pqrCmd.y) in the body frame.
 
 ```cpp
 V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, float collThrustCmd)
@@ -537,7 +588,9 @@ V3F QuadControl::RollPitchControl(V3F accelCmd, Quaternion<float> attitude, floa
 }
 ```
 
-This part is implemented in QuadControl::AltitudeControl:
+- This part is implemented in QuadControl::AltitudeControl:
+
+A PID controller is used for the altitude control [6] Unlike the Python part, the integral term is added and acceleration is limited.
 
 ```cpp
 float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, float velZ, Quaternion<float> attitude, float accelZCmd, float dt)
@@ -588,7 +641,9 @@ float QuadControl::AltitudeControl(float posZCmd, float velZCmd, float posZ, flo
 ```
 
 
-This part is implemented in QuadControl::LateralPositionControl:
+- This part is implemented in QuadControl::LateralPositionControl:
+
+The drone generates lateral acceleration by changing the body orientation which results in non-zero thrust in the desired direction. A PD controller is used for the lateral controller.
 
 ```cpp
 V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel, V3F accelCmd)
@@ -634,7 +689,9 @@ V3F QuadControl::LateralPositionControl(V3F posCmd, V3F velCmd, V3F pos, V3F vel
 }
 
 ```
-This part is implemented in QuadControl::YawControl:
+- This part is implemented in QuadControl::YawControl:
+
+A P controller is used to control the drone's yaw. This controller returns desired yaw rate.
 
 ```cpp
 float QuadControl::YawControl(float yawCmd, float yaw)
@@ -674,47 +731,6 @@ float QuadControl::YawControl(float yawCmd, float yaw)
 
 ```
 
-This part is implemented in QuadControl::GenerateMotorCommands:
-
-```cpp
-VehicleCommand QuadControl::GenerateMotorCommands(float collThrustCmd, V3F momentCmd)
-{
-  // Convert a desired 3-axis moment and collective thrust command to 
-  //   individual motor thrust commands
-  // INPUTS: 
-  //   desCollectiveThrust: desired collective thrust [N]
-  //   desMoment: desired rotation moment about each axis [N m]
-  // OUTPUT:
-  //   set class member variable cmd (class variable for graphing) where
-  //   cmd.desiredThrustsN[0..3]: motor commands, in [N]
-
-  // HINTS: 
-  // - you can access parts of desMoment via e.g. desMoment.x
-  // You'll need the arm length parameter L, and the drag/thrust ratio kappa
-
-  ////////////////////////////// BEGIN CODE ///////////////////////////
-
-//  cmd.desiredThrustsN[0] = mass * 9.81f / 4.f; // front left
-//  cmd.desiredThrustsN[1] = mass * 9.81f / 4.f; // front right
-//  cmd.desiredThrustsN[2] = mass * 9.81f / 4.f; // rear left
-//  cmd.desiredThrustsN[3] = mass * 9.81f / 4.f; // rear right
-    float l = L / sqrtf(2.f);
-    float c_bar = collThrustCmd;  // F1 + F2 + F3 + F4
-    float p_bar = momentCmd.x / l; // F1 - F2 + F3 - F4
-    float q_bar = momentCmd.y / l;  // F1 + F2 - F3 - F4
-    float r_bar = -momentCmd.z / kappa; // F1 - F2 - F3 + F4
-    
-    cmd.desiredThrustsN[0] = (c_bar + p_bar + q_bar + r_bar) / 4.f; // front left
-    cmd.desiredThrustsN[1] = (c_bar - p_bar + q_bar - r_bar) / 4.f; // front right
-    cmd.desiredThrustsN[2] = (c_bar + p_bar - q_bar - r_bar) / 4.f; // rear left
-    cmd.desiredThrustsN[3] = (c_bar - p_bar - q_bar + r_bar) / 4.f; // rear right
-  
-  /////////////////////////////// END CODE ////////////////////////////
-
-  return cmd;
-}
-
-```
 
 
 
