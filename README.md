@@ -170,7 +170,7 @@ First, we will implement the body rate and roll / pitch control.  For the simula
 
 
 
-1. Implement body rate control
+#### 1. Implement body rate control ####
 
 The commanded roll, pitch, and yaw are collected by the body rate controller, and they are translated into the desired moment along the axis in the body frame. This control method use only P controller.
 
@@ -184,7 +184,7 @@ The commanded roll, pitch, and yaw are collected by the body rate controller, an
                          p_actual,
                          q_actual,
                          r_actual):
-    # TODO replace with your own implementation
+    
     # return u_bar_p, u_bar_q, u_bar_r
     p_err= p_c - p_actual 
     u_bar_p = self.k_p_p * p_err
