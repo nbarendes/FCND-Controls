@@ -169,6 +169,22 @@ we may find it helpful to consult the [Python controller code](https://github.co
 First, we will implement the body rate and roll / pitch control.  For the simulation, we will use `Scenario 2`.  In this scenario, we will see a quad above the origin.  It is created with a small initial rotation speed about its roll axis.  The controller will need to stabilize the rotational motion and bring the vehicle back to level attitude.
 
 
+## diagram of quadrotor contoller ##
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #### 1- Implement body rate control ####
 
