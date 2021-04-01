@@ -785,6 +785,9 @@ Result:
    - X position of both drones should be within 0.1 meters of the target for at least 1.25 seconds
    - Quad2 yaw should be within 0.1 of the target for at least 1 second
 
+Result:
+
+![Console de débogage Microsoft Visual Studio_2](https://user-images.githubusercontent.com/34095574/113296194-70170180-92f9-11eb-97f7-98ad0d0b2247.jpg)
 
  - scenario 4
    - position error for all 3 quads should be less than 0.1 meters for at least 1.5 seconds
