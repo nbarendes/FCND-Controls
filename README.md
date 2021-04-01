@@ -275,7 +275,11 @@ Methods in QuadControl.cpp is given below
 
 This part is implemented in QuadControl::BodyRateControl:
 
-
+```
+  V3F MOI = V3F(Ixx, Iyy, Izz);
+  
+  momentCmd = MOI * kpPQR * ( pqrCmd - pqr );
+```
 
 
 
