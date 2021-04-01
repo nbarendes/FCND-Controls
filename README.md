@@ -792,6 +792,10 @@ Result:
  - scenario 4
    - position error for all 3 quads should be less than 0.1 meters for at least 1.5 seconds
 
+Result:
+
+![Console de débogage Microsoft Visual Studio](https://user-images.githubusercontent.com/34095574/113296796-34c90280-92fa-11eb-8223-be0db44fa3f3.jpg)
+
  - scenario 5
    - position error of the quad should be less than 0.25 meters for at least 3 seconds
 
