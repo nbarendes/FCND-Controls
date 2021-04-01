@@ -164,23 +164,20 @@ we may find it helpful to consult the [Python controller code](https://github.co
 
 3. **Parameter Ratios**: In this [one-page document](https://www.overleaf.com/read/bgrkghpggnyc#/61023787/) we can find a derivation of the ratio of velocity proportional gain to position proportional gain for a critically damped double integrator system. The ratio of `kpV / kpP` should be 4.
 
-### Body rate and roll/pitch control (scenario 2) ###
-
-First, we will implement the body rate and roll / pitch control.  For the simulation, we will use `Scenario 2`.  In this scenario, we will see a quad above the origin.  It is created with a small initial rotation speed about its roll axis.  The controller will need to stabilize the rotational motion and bring the vehicle back to level attitude.
 
 
 ## diagram of quadrotor contoller ##
 
+![image](https://user-images.githubusercontent.com/34095574/113293695-63dd7500-92f6-11eb-9fdb-f8d35d345b78.png)
 
 
 
 
 
 
+### Body rate and roll/pitch control (scenario 2) ###
 
-
-
-
+First, we will implement the body rate and roll / pitch control.  For the simulation, we will use `Scenario 2`.  In this scenario, we will see a quad above the origin.  It is created with a small initial rotation speed about its roll axis.  The controller will need to stabilize the rotational motion and bring the vehicle back to level attitude.
 
 
 
