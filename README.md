@@ -279,6 +279,102 @@ This part is implemented in QuadControl::BodyRateControl:
   momentCmd = MOI * kpPQR * ( pqrCmd - pqr );
 ```
 
+This part is implemented in QuadControl::RollPitchControl:
+
+```
+  if ( collThrustCmd > 0 ) {
+    float c = - collThrustCmd / mass;
+    float b_x_cmd = CONSTRAIN(accelCmd.x / c, -maxTiltAngle, maxTiltAngle);
+    float b_x_err = b_x_cmd - R(0,2);
+    float b_x_p_term = kpBank * b_x_err;
+    
+    float b_y_cmd = CONSTRAIN(accelCmd.y / c, -maxTiltAngle, maxTiltAngle);
+    float b_y_err = b_y_cmd - R(1,2);
+    float b_y_p_term = kpBank * b_y_err;
+    
+    pqrCmd.x = (R(1,0) * b_x_p_term - R(0,0) * b_y_p_term) / R(2,2);
+    pqrCmd.y = (R(1,1) * b_x_p_term - R(0,1) * b_y_p_term) / R(2,2);
+  } else {
+    pqrCmd.x = 0.0;
+    pqrCmd.y = 0.0;
+  }
+  
+  pqrCmd.z = 0;
+```
+
+This part is implemented in QuadControl::AltitudeControl:
+
+```
+  float z_err = posZCmd - posZ;
+  float p_term = kpPosZ * z_err;
+  
+  float z_dot_err = velZCmd - velZ;
+  integratedAltitudeError += z_err * dt;
+
+  
+  float d_term = kpVelZ * z_dot_err + velZ;
+  float i_term = KiPosZ * integratedAltitudeError;
+  float b_z = R(2,2);
+
+  float u_1_bar = p_term + d_term + i_term + accelZCmd;
+
+  float acc = ( u_1_bar - CONST_GRAVITY ) / b_z;
+
+  thrust = - mass * CONSTRAIN(acc, - maxAscentRate / dt, maxAscentRate / dt);
+
+```
+This part is implemented in QuadControl::LateralPositionControl:
+
+```
+   if (velCmd.mag() > maxSpeedXY) {
+      velCmd = velCmd.norm() * maxSpeedXY;
+    }
+   
+
+  accelCmd = kpPosXY * (posCmd - pos) + kpVelXY * (velCmd - vel) + accelCmd ;
+
+    if (accelCmd.mag() > maxAccelXY) {
+      accelCmd = accelCmd.norm() * maxAccelXY;
+    }
+
+```
+This part is implemented in QuadControl::YawControl:
+
+```
+  float yaw_cmd_2_pi = 0;
+  if ( yawCmd > 0 ) {
+    yaw_cmd_2_pi = fmodf(yawCmd, 2 * F_PI);
+  } else {
+    yaw_cmd_2_pi = -fmodf(-yawCmd, 2 * F_PI);
+  }
+  float err = yaw_cmd_2_pi - yaw;
+  if ( err > F_PI ) {
+    err -= 2 * F_PI;
+  } if ( err < -F_PI ) {
+    err += 2 * F_PI;
+  }
+  yawRateCmd = kpYaw * err;
+
+```
+
+This part is implemented in QuadControl::GenerateMotorCommands:
+
+```
+    float l = L / sqrtf(2.f);
+    float c_bar = collThrustCmd;  // F1 + F2 + F3 + F4
+    float p_bar = momentCmd.x / l; // F1 - F2 + F3 - F4
+    float q_bar = momentCmd.y / l;  // F1 + F2 - F3 - F4
+    float r_bar = -momentCmd.z / kappa; // F1 - F2 - F3 + F4
+    
+    cmd.desiredThrustsN[0] = (c_bar + p_bar + q_bar + r_bar) / 4.f; // front left
+    cmd.desiredThrustsN[1] = (c_bar - p_bar + q_bar - r_bar) / 4.f; // front right
+    cmd.desiredThrustsN[2] = (c_bar + p_bar - q_bar - r_bar) / 4.f; // rear left
+    cmd.desiredThrustsN[3] = (c_bar - p_bar - q_bar + r_bar) / 4.f; // rear right
+
+```
+
+
+
 
 
 
