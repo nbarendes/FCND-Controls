@@ -269,8 +269,6 @@ How about trying to fly this trajectory as quickly as possible (but within follo
 
 ## Implementation in C++ ##
 
-Implemented body rate control in C++.
-
 Methods in QuadControl.cpp is given below
 
 This part is implemented in QuadControl::BodyRateControl:
